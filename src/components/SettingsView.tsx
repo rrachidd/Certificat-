@@ -41,7 +41,7 @@ export default function SettingsView({ settings, onSave }: SettingsProps) {
   return (
     <div className="max-w-3xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-        <i className="fas fa-building text-[var(--color-gld)]"></i>
+        <i className="fas fa-building text-[var(--color-primary)]"></i>
         إعدادات المؤسسة
       </h2>
       

@@ -19,21 +19,22 @@ service cloud.firestore {
     }
     
     function isValidInstitutionSettings(data, userId) {
-      return data.keys().size() >= 2
-        && data.keys().hasAny(['name', 'userId'])
+      return data.keys().size() >= 1
         && data.name is string && data.name.size() > 0 && data.name.size() <= 200
-        && data.userId == userId
-        && (data.get('academy', '') is string) && (data.get('academy', '').size() <= 200)
-        && (data.get('province', '') is string) && (data.get('province', '').size() <= 200)
-        && (data.get('refNumber', '') is string) && (data.get('refNumber', '').size() <= 200)
-        && (data.get('updatedAt', request.time) == request.time);
+        && (data.userId == userId || data.userId == null);
     }
 
     match /users/{userId} {
-      allow get: if isOwner(userId);
+      allow read: if isOwner(userId);
       allow create: if isOwner(userId) && isValidInstitutionSettings(incoming(), userId);
-      allow update: if isOwner(userId) && isValidInstitutionSettings(incoming(), userId)
-                    && incoming().userId == existing().userId;
+      allow update: if isOwner(userId) && isValidInstitutionSettings(incoming(), userId);
+      
+      match /archive/{archiveId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /students/{studentId} {
+        allow read, write: if isOwner(userId);
+      }
     }
   }
 }

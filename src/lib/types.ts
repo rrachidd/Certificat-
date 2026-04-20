@@ -9,10 +9,22 @@ export interface InstitutionSettings {
   city?: string;
 }
 
+export interface ArchiveRecord {
+  id?: string;
+  studentName: string;
+  regNum: string;
+  certNumber: string;
+  certYear: string;
+  issuedAt: string;
+  level: string;
+}
+
 export interface Student {
   _id: number;
   regNum: string;
-  name: string;
+  firstName: string;
+  lastName: string;
+  name?: string; // fallback
   birthDate: string;
   birthPlace: string;
   level: string;
