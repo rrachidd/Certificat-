@@ -1,0 +1,24 @@
+{
+  "entities": {
+    "InstitutionSettings": {
+      "title": "Institution Settings",
+      "description": "Settings for the school/institution",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "academy": { "type": "string" },
+        "province": { "type": "string" },
+        "refNumber": { "type": "string" },
+        "userId": { "type": "string" },
+        "updatedAt": { "type": "number" }
+      },
+      "required": ["name", "userId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/InstitutionSettings" },
+      "description": "User's institution profile."
+    }
+  }
+}
