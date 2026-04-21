@@ -12,7 +12,7 @@ interface SidebarProps {
 
 export default function Sidebar({ currentView, setCurrentView, user, onLogout, isOpen, setIsOpen }: SidebarProps) {
   return (
-    <aside className={`fixed lg:relative inset-y-0 right-0 z-50 w-64 bg-[var(--color-bg2)]/90 backdrop-blur-xl border-l border-[var(--color-brd)] min-h-screen p-5 flex flex-col transform transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+    <aside className={`fixed lg:relative inset-y-0 right-0 z-50 w-64 sidebar-grad backdrop-blur-xl border-l border-[var(--color-brd)] min-h-screen p-5 flex flex-col transform transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
       <div className="flex items-center justify-between lg:justify-start gap-3 mb-10">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-accent)] shadow-lg shadow-[var(--color-primary-g)]">

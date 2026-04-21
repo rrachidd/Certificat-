@@ -118,13 +118,13 @@ export default function ArchiveView({ user }: { user: User }) {
         </div>
       )}
 
-      <div className="rounded-2xl p-4 mb-4 flex flex-wrap items-center gap-3 bg-[var(--color-card)] border border-[var(--color-brd)]">
+      <div className="rounded-2xl p-4 mb-4 flex flex-wrap items-center gap-3 card-grad border border-[var(--color-brd)]">
          <input type="text" className="inp flex-1 min-w-[200px]" placeholder="بحث بالاسم، رقم التسجيل، أو رقم الشهادة..." value={search} onChange={e=>setSearch(e.target.value)} />
          <button className="btn btn-primary" onClick={handlePrint} disabled={filteredRecords.length === 0}><i className="fas fa-print"></i> طباعة الأرشيف</button>
          <button className="btn btn-o btn-s" onClick={fetchArchive}><i className="fas fa-sync"></i> تحديث</button>
       </div>
 
-      <div className="rounded-2xl overflow-hidden bg-[var(--color-card)] border border-[var(--color-brd)]">
+      <div className="rounded-2xl overflow-hidden card-grad border border-[var(--color-brd)]">
          <div className="overflow-x-auto max-h-[70vh] overflow-y-auto">
             <table className="dt w-full text-sm">
                <thead>

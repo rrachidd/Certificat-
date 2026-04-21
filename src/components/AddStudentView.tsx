@@ -77,7 +77,7 @@ export default function AddStudentView({ user, onSuccess }: { user: User, onSucc
         </h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-[var(--color-card)] p-6 rounded-2xl border border-[var(--color-brd)] shadow-sm space-y-6">
+      <form onSubmit={handleSubmit} className="card-grad p-6 rounded-2xl border border-[var(--color-brd)] shadow-sm space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-semibold text-[var(--color-mt)] mb-1">الاسم *</label>

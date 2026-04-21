@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { Student } from '../lib/types';
 import { db } from '../lib/firebase';
-import { collection, addDoc, getDocs, setDoc, doc, writeBatch, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, setDoc, doc, writeBatch, deleteDoc, query } from 'firebase/firestore';
 
 const cf = [
     {key:'regNum',label:'رقم التسجيل',req:false},
@@ -70,6 +70,31 @@ export default function CertificatesView({ institutionSettings, user }: { instit
   // Archive inputs
   const [startCertNum, setStartCertNum] = useState('1');
   const [certYear, setCertYear] = useState(new Date().getFullYear().toString());
+
+  // Auto-fetch next certificate number based on Archive
+  useEffect(() => {
+    const fetchNextCertNum = async () => {
+      if (!user) return;
+      try {
+        const q = query(collection(db, 'users', user.uid, 'archive'));
+        const snap = await getDocs(q);
+        let maxNum = 0;
+        snap.docs.forEach(d => {
+          const data = d.data();
+          if (data.certYear === certYear) {
+            const num = parseInt(data.certNumber, 10);
+            if (!isNaN(num) && num > maxNum) {
+              maxNum = num;
+            }
+          }
+        });
+        setStartCertNum((maxNum + 1).toString());
+      } catch (err) {
+        console.error("Error fetching next cert num:", err);
+      }
+    };
+    fetchNextCertNum();
+  }, [user, certYear]);
 
   // Modals
   const [certModalId, setCertModalId] = useState<number | null>(null);
@@ -449,7 +474,7 @@ body { font-family: 'Arial', sans-serif; -webkit-print-color-adjust: exact; prin
                    <input type="text" className="inp w-24 text-center font-bold" value={certYear} onChange={e=>setCertYear(e.target.value)} />
                 </div>
                 <div>
-                   <label className="block text-xs font-semibold text-[var(--color-mt)] mb-1">رقم أول شهادة ستطبع</label>
+                   <label className="block text-xs font-semibold text-[var(--color-mt)] mb-1" title="يتم توليد الرقم أوتوماتيكياً بناءً على الأرشيف">رقم الشهادة الموالية (تلقائي)</label>
                    <input type="number" className="inp w-32 text-center font-bold" value={startCertNum} onChange={e=>setStartCertNum(e.target.value)} />
                 </div>
                 

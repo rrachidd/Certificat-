@@ -110,7 +110,7 @@ export default function StatsView({ user }: { user: User }) {
         <div className="grid grid-cols-1 gap-6">
           
           {/* Card 1: Yearly Departures */}
-          <div className="bg-[var(--color-card)] p-4 rounded-2xl border border-[var(--color-brd)] shadow-sm">
+          <div className="card-grad p-4 rounded-2xl border border-[var(--color-brd)] shadow-sm">
             <h3 className="font-bold mb-4 flex items-center gap-2">
               <i className="fas fa-chart-line text-[var(--color-primary)]"></i> تطور المغادرات حسب السنوات
             </h3>
@@ -120,7 +120,7 @@ export default function StatsView({ user }: { user: User }) {
                   <CartesianGrid strokeDasharray="3 3" stroke="#ccc" opacity={0.2} />
                   <XAxis dataKey="year" tick={{ fill: 'var(--color-mt)', fontSize: 12 }} />
                   <YAxis tick={{ fill: 'var(--color-mt)', fontSize: 12 }} />
-                  <Tooltip wrapperStyle={{ direction: 'rtl', fontFamily: 'Inter' }} contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-brd)', borderRadius: '8px' }} />
+                  <Tooltip wrapperStyle={{ direction: 'rtl', fontFamily: 'Inter' }} contentStyle={{ backgroundColor: 'var(--color-bg2)', border: '1px solid var(--color-brd)', borderRadius: '8px', color: '#fff' }} />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
                   <Line type="monotone" dataKey="total" name="إجمالي المغادرات" stroke="#3b82f6" strokeWidth={4} activeDot={{ r: 8, fill: '#3b82f6' }} />
                 </LineChart>
@@ -129,7 +129,7 @@ export default function StatsView({ user }: { user: User }) {
           </div>
 
           {/* Card 2: Levels Bar */}
-          <div className="bg-[var(--color-card)] p-4 rounded-2xl border border-[var(--color-brd)] shadow-sm">
+          <div className="card-grad p-4 rounded-2xl border border-[var(--color-brd)] shadow-sm">
             <h3 className="font-bold mb-4 flex items-center gap-2">
               <i className="fas fa-layer-group text-[#10b981]"></i> مقارنة المغادرات حسب المستوى
             </h3>
@@ -139,7 +139,7 @@ export default function StatsView({ user }: { user: User }) {
                   <CartesianGrid strokeDasharray="3 3" stroke="#ccc" opacity={0.2} horizontal={false} />
                   <XAxis type="number" tick={{ fill: 'var(--color-mt)' }} />
                   <YAxis dataKey="name" type="category" width={140} tick={{ fill: 'var(--color-fg)', fontSize: 13 }} />
-                  <Tooltip cursor={{ fill: 'rgba(0,0,0,0.05)' }} wrapperStyle={{ direction: 'rtl', fontFamily: 'Inter' }} contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-brd)', borderRadius: '8px' }} />
+                  <Tooltip cursor={{ fill: 'rgba(0,0,0,0.05)' }} wrapperStyle={{ direction: 'rtl', fontFamily: 'Inter' }} contentStyle={{ backgroundColor: 'var(--color-bg2)', border: '1px solid var(--color-brd)', borderRadius: '8px', color: '#fff' }} />
                   <Legend />
                   <Bar dataKey="count" name="عدد التلاميذ المغادرين" fill="#10b981" radius={[0, 4, 4, 0]}>
                     {levelBarData.map((entry, index) => (
@@ -152,7 +152,7 @@ export default function StatsView({ user }: { user: User }) {
           </div>
 
           {/* Card 3: Age Bar */}
-          <div className="bg-[var(--color-card)] p-4 rounded-2xl border border-[var(--color-brd)] shadow-sm">
+          <div className="card-grad p-4 rounded-2xl border border-[var(--color-brd)] shadow-sm">
             <h3 className="font-bold mb-4 flex items-center gap-2">
               <i className="fas fa-birthday-cake text-[#f59e0b]"></i> كثافة المغادرات حسب السن
             </h3>
@@ -162,7 +162,7 @@ export default function StatsView({ user }: { user: User }) {
                   <CartesianGrid strokeDasharray="3 3" stroke="#ccc" opacity={0.2} vertical={false} />
                   <XAxis dataKey="name" tick={{ fill: 'var(--color-fg)', fontSize: 13 }} />
                   <YAxis type="number" tick={{ fill: 'var(--color-mt)' }} />
-                  <Tooltip cursor={{ fill: 'rgba(0,0,0,0.05)' }} wrapperStyle={{ direction: 'rtl', fontFamily: 'Inter' }} contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-brd)', borderRadius: '8px' }} />
+                  <Tooltip cursor={{ fill: 'rgba(0,0,0,0.05)' }} wrapperStyle={{ direction: 'rtl', fontFamily: 'Inter' }} contentStyle={{ backgroundColor: 'var(--color-bg2)', border: '1px solid var(--color-brd)', borderRadius: '8px', color: '#fff' }} />
                   <Legend />
                   <Bar dataKey="count" name="عدد حالات المغادرة" fill="#f59e0b" radius={[4, 4, 0, 0]}>
                     {ageBarData.map((entry, index) => (
@@ -175,7 +175,7 @@ export default function StatsView({ user }: { user: User }) {
           </div>
 
           {/* Generated Text Report */}
-          <div className="bg-[var(--color-card)] p-6 rounded-2xl border border-[var(--color-brd)] shadow-sm mt-2">
+          <div className="card-grad p-6 rounded-2xl border border-[var(--color-brd)] shadow-sm mt-2">
              <h3 className="font-bold mb-4 flex items-center gap-2 text-lg text-[var(--color-fg)]">
                 <i className="fas fa-file-alt text-[#8b5cf6]"></i> تقرير تحليلي وتفسيري للبيانات
              </h3>
