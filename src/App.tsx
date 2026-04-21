@@ -8,11 +8,13 @@ import Sidebar from './components/Sidebar';
 import SettingsView from './components/SettingsView';
 import CertificatesView from './components/CertificatesView';
 import ArchiveView from './components/ArchiveView';
+import AddStudentView from './components/AddStudentView';
+import StatsView from './components/StatsView';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [currentView, setCurrentView] = useState<'certificates' | 'settings' | 'archive'>('certificates');
+  const [currentView, setCurrentView] = useState<'certificates' | 'settings' | 'archive' | 'add-student' | 'stats'>('certificates');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const [institutionSettings, setInstitutionSettings] = useState({
@@ -113,6 +115,10 @@ export default function App() {
              <SettingsView settings={institutionSettings} onSave={saveSettings} />
           ) : currentView === 'archive' ? (
              <ArchiveView user={user} />
+          ) : currentView === 'stats' ? (
+             <StatsView user={user} />
+          ) : currentView === 'add-student' ? (
+             <AddStudentView user={user} onSuccess={() => setCurrentView('certificates')} />
           ) : (
              <CertificatesView institutionSettings={institutionSettings} user={user} />
           )}

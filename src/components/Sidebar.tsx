@@ -2,8 +2,8 @@ import React from 'react';
 import { User } from 'firebase/auth';
 
 interface SidebarProps {
-  currentView: 'certificates' | 'settings' | 'archive';
-  setCurrentView: (v: 'certificates' | 'settings' | 'archive') => void;
+  currentView: 'certificates' | 'settings' | 'archive' | 'add-student' | 'stats';
+  setCurrentView: (v: 'certificates' | 'settings' | 'archive' | 'add-student' | 'stats') => void;
   user: User;
   onLogout: () => void;
   isOpen: boolean;
@@ -28,7 +28,7 @@ export default function Sidebar({ currentView, setCurrentView, user, onLogout, i
         </button>
       </div>
 
-      <nav className="flex-1 space-y-2">
+      <nav className="flex-1 space-y-2 overflow-y-auto pr-1">
         <button 
           onClick={() => { setCurrentView('certificates'); setIsOpen(false); }}
           className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${currentView === 'certificates' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
@@ -37,11 +37,25 @@ export default function Sidebar({ currentView, setCurrentView, user, onLogout, i
           الشواهد المدرسية
         </button>
         <button 
+          onClick={() => { setCurrentView('add-student'); setIsOpen(false); }}
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${currentView === 'add-student' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
+        >
+          <i className="fas fa-plus w-5 text-center"></i>
+          إضافة تلميذ
+        </button>
+        <button 
           onClick={() => { setCurrentView('archive'); setIsOpen(false); }}
           className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${currentView === 'archive' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
         >
           <i className="fas fa-archive w-5 text-center"></i>
           أرشيف الشواهد
+        </button>
+        <button 
+          onClick={() => { setCurrentView('stats'); setIsOpen(false); }}
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${currentView === 'stats' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
+        >
+          <i className="fas fa-chart-pie w-5 text-center"></i>
+          إحصائيات ومقارنات
         </button>
         <button 
           onClick={() => { setCurrentView('settings'); setIsOpen(false); }}

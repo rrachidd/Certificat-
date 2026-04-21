@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { Student } from '../lib/types';
 import { db } from '../lib/firebase';
-import { collection, addDoc, getDocs, setDoc, doc, writeBatch } from 'firebase/firestore';
+import { collection, addDoc, getDocs, setDoc, doc, writeBatch, deleteDoc } from 'firebase/firestore';
 
 const cf = [
     {key:'regNum',label:'رقم التسجيل',req:false},
@@ -74,6 +74,7 @@ export default function CertificatesView({ institutionSettings, user }: { instit
   // Modals
   const [certModalId, setCertModalId] = useState<number | null>(null);
   const [editModalId, setEditModalId] = useState<number | null>(null);
+  const [confirmDeleteRowId, setConfirmDeleteRowId] = useState<number | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -529,9 +530,35 @@ body { font-family: 'Arial', sans-serif; -webkit-print-color-adjust: exact; prin
                             <td>{d.yearFrom}</td>
                             <td>{d.reason}</td>
                             <td>
-                               <div className="flex gap-2">
-                                  <button className="btn btn-o btn-icon btn-s" title="تعديل" onClick={() => setEditModalId(d._id)}><i className="fas fa-pen"></i></button>
-                                  <button className="btn btn-o btn-icon btn-s" title="معاينة" onClick={() => setCertModalId(d._id)}><i className="fas fa-eye"></i></button>
+                               <div className="flex items-center gap-2">
+                                  {confirmDeleteRowId === d._id ? (
+                                     <>
+                                        <span className="text-xs font-bold text-[var(--color-dng)]">تأكيد:</span>
+                                        <button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-bold transition-colors" onClick={async (e) => {
+                                           e.stopPropagation();
+                                           try {
+                                             if (user) {
+                                                await deleteDoc(doc(db, 'users', user.uid, 'students', d._id.toString()));
+                                             }
+                                             setStudents(prev => prev.filter(s => s._id !== d._id));
+                                             setConfirmDeleteRowId(null);
+                                           } catch(err){
+                                             console.error('Delete error', err);
+                                             alert('حدث خطأ أثناء الحذف، الرجاء المحاولة مرة أخرى.');
+                                           }
+                                        }}>نعم</button>
+                                        <button className="btn btn-o btn-s text-xs" onClick={(e) => { e.stopPropagation(); setConfirmDeleteRowId(null); }}>لا</button>
+                                     </>
+                                  ) : (
+                                     <>
+                                        <button className="btn btn-o btn-icon btn-s" title="تعديل" onClick={(e) => { e.stopPropagation(); setEditModalId(d._id); }}>
+                                           <i className="fas fa-pen"></i>
+                                        </button>
+                                        <button className="btn btn-o btn-icon btn-s text-[var(--color-dng)]" title="حذف" onClick={(e) => { e.stopPropagation(); setConfirmDeleteRowId(d._id); }}>
+                                           <i className="fas fa-trash"></i>
+                                        </button>
+                                     </>
+                                  )}
                                </div>
                             </td>
                           </tr>
@@ -606,8 +633,25 @@ body { font-family: 'Arial', sans-serif; -webkit-print-color-adjust: exact; prin
                       ))}
                    </div>
                 </div>
-                <div className="p-4 border-t border-[#263348] flex justify-end">
-                   <button className="btn btn-g" onClick={() => setEditModalId(null)}>إغلاق وحفظ</button>
+                <div className="p-4 border-t border-[var(--color-brd)] flex justify-end items-center">
+                   <button className="btn btn-g" onClick={() => {
+                        // Persist edits back to exact document for this student
+                        const goSave = async () => {
+                           if(!user) return;
+                           const savedStudent = students.find(s => s._id === editModalId);
+                           if(!savedStudent) return;
+                           // Update DB document by matching _id
+                           const q = query(collection(db, 'users', user.uid, 'students'));
+                           const snap = await getDocs(q);
+                           let docId = null;
+                           snap.forEach(d => { if(d.data()._id === editModalId) docId = d.id; });
+                           if (docId) {
+                             await setDoc(doc(db, 'users', user.uid, 'students', docId), savedStudent);
+                           }
+                        };
+                        goSave();
+                        setEditModalId(null);
+                   }}>إغلاق وحفظ</button>
                 </div>
              </div>
           </div>
