@@ -16,7 +16,7 @@ import StatsView from './components/StatsView';
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [currentView, setCurrentView] = useState<'certificates' | 'settings' | 'archive' | 'add-student' | 'stats' | 'staff-docs' | 'add-staff' | 'staff-work-cert' | 'staff-resumption' | 'staff-absence' | 'staff-leave' | 'staff-transmission'>('certificates');
+  const [currentView, setCurrentView] = useState<'certificates' | 'settings' | 'archive' | 'add-student' | 'stats' | 'staff-docs' | 'add-staff' | 'staff-work-cert' | 'staff-resumption' | 'staff-absence' | 'staff-leave' | 'staff-transmission' | 'staff-medical-receipt'>('certificates');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const [institutionSettings, setInstitutionSettings] = useState({
@@ -124,7 +124,7 @@ export default function App() {
              <AddStudentView user={user} onSuccess={() => setCurrentView('certificates')} />
           ) : currentView === 'add-staff' ? (
              <AddStaffView user={user} onSuccess={() => setCurrentView('staff-docs')} />
-          ) : currentView === 'staff-docs' || currentView === 'staff-work-cert' || currentView === 'staff-resumption' || currentView === 'staff-absence' || currentView === 'staff-leave' || currentView === 'staff-transmission' ? (
+          ) : currentView === 'staff-docs' || currentView === 'staff-work-cert' || currentView === 'staff-resumption' || currentView === 'staff-absence' || currentView === 'staff-leave' || currentView === 'staff-transmission' || currentView === 'staff-medical-receipt' ? (
              <StaffCertificatesView institutionSettings={institutionSettings} user={user} highlightDoc={currentView} />
           ) : (
              <CertificatesView institutionSettings={institutionSettings} user={user} />

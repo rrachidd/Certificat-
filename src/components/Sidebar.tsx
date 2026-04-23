@@ -2,8 +2,8 @@ import React from 'react';
 import { User } from 'firebase/auth';
 
 interface SidebarProps {
-  currentView: 'certificates' | 'settings' | 'archive' | 'add-student' | 'stats' | 'staff-docs' | 'add-staff' | 'staff-work-cert' | 'staff-resumption' | 'staff-absence' | 'staff-leave' | 'staff-transmission';
-  setCurrentView: (v: 'certificates' | 'settings' | 'archive' | 'add-student' | 'stats' | 'staff-docs' | 'add-staff' | 'staff-work-cert' | 'staff-resumption' | 'staff-absence' | 'staff-leave' | 'staff-transmission') => void;
+  currentView: 'certificates' | 'settings' | 'archive' | 'add-student' | 'stats' | 'staff-docs' | 'add-staff' | 'staff-work-cert' | 'staff-resumption' | 'staff-absence' | 'staff-leave' | 'staff-transmission' | 'staff-medical-receipt';
+  setCurrentView: (v: 'certificates' | 'settings' | 'archive' | 'add-student' | 'stats' | 'staff-docs' | 'add-staff' | 'staff-work-cert' | 'staff-resumption' | 'staff-absence' | 'staff-leave' | 'staff-transmission' | 'staff-medical-receipt') => void;
   user: User;
   onLogout: () => void;
   isOpen: boolean;
@@ -131,6 +131,13 @@ export default function Sidebar({ currentView, setCurrentView, user, onLogout, i
             >
               <i className="fas fa-paper-plane w-4 text-center opacity-70"></i>
               ورقة الإرسال
+            </button>
+            <button 
+              onClick={() => { setCurrentView('staff-medical-receipt'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg text-[11px] font-medium transition-all ${currentView === 'staff-medical-receipt' ? 'text-[var(--color-primary)]' : 'text-[var(--color-mt)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-file-medical w-4 text-center opacity-70"></i>
+              وصل استلام شهادة طبية
             </button>
           </div>
         </div>

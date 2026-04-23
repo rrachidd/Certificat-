@@ -34,6 +34,7 @@ export default function StaffCertificatesView({ institutionSettings, user, highl
       case 'staff-absence': return 'طلب الإذن بالغياب';
       case 'staff-leave': return 'الرخص';
       case 'staff-transmission': return 'ورقة الإرسال';
+      case 'staff-medical-receipt': return 'وصل استلام شهادة طبية';
       default: return 'إدارة شؤون الموظفين';
     }
   };
@@ -51,6 +52,10 @@ export default function StaffCertificatesView({ institutionSettings, user, highl
     attachments: '',
     count: '1',
     notes: 'للاختصاص و الإخبار'
+  });
+
+  const [medicalInputs, setMedicalInputs] = useState({
+    deliveredBy: ''
   });
 
   useEffect(() => {
@@ -401,9 +406,53 @@ export default function StaffCertificatesView({ institutionSettings, user, highl
             <div style="text-align: center;">توقيع وختم السيد المدير<br><br>حرر وأرسل بتاريخ: ...................</div>
           </div>
         `;
+    } else if (type === 'medical-receipt') {
+        titleStr = 'وصل استلام شهادة طبية';
+        template = `
+          <div style="display: flex; align-items: center; justify-content: center; gap: 10px; border-bottom: 1.5px solid #000; padding-bottom: 4px; margin-bottom: 6px;">
+            <img src="${logoUrl}" style="height: 38px; width: auto;" />
+            <div style="text-align: center; font-weight: bold; font-size: 10px; line-height: 1.1;">
+              المملكة المغربية - وزارة التربية الوطنية والتعليم الأولي والرياضة<br>
+              الأكاديمية الجهوية: ${inst.academy || ''} - المديرية الإقليمية: ${inst.province || ''}<br>
+              <span style="font-size: 11px;">${inst.name || ''}</span>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 14px; font-weight: bold; border-bottom: 1px solid #000; padding: 0 15px;">وصل باسـتلام شـهادة طبيـة</span>
+            <div style="font-size: 10px; font-weight: bold;">بتاريخ : ...................</div>
+          </div>
+
+          <div style="font-size: 11px; line-height: 1.5; margin-bottom: 5px;">
+            <div>أنا الموقع أسفله مدير مؤسسة : <b>${inst.name || ''}</b></div>
+            <div>أشهد أني تسلمت من السيد(ة) : <b>${extras?.deliveredBy || (staff ? (staff.firstName + ' ' + staff.lastName) : '................')}</b></div>
+            <div style="display: flex; justify-content: space-between;">
+              <div style="flex: 1;">شهادة طبية سلمها الطبيب: <b>..........................</b></div>
+              <div style="width: 100px;">ب.ت.و : <b>${staff?.cin || '..........'}</b></div>
+            </div>
+            <div style="display: flex; gap: 20px;">
+              <div>مدتها : <b>....</b> يوم</div>
+              <div>ابتداء من : <b>................</b></div>
+            </div>
+          </div>
+
+          <div style="border: 1px solid #000; padding: 5px; margin-top: 5px; line-height: 1.4; font-size: 10px;">
+            <div style="text-align: center; font-weight: bold; margin-bottom: 3px;">تتعلق بالسيد(ة) : ${staff ? (staff.firstName + ' ' + staff.lastName) : '................'}</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px 15px;">
+              <div style="display: flex; justify-content: space-between;"><span>رقم التأجير:</span><b>${staff?.ppr || '........'}</b></div>
+              <div style="display: flex; justify-content: space-between;"><span>الإطار:</span><b>${staff?.framework || '........'}</b></div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; margin-top: 5px; min-height: 45px; font-size: 10px;">
+            <div style="border: 1px solid #000; padding: 4px; text-align: center; font-weight: bold;">توقيع الموظف</div>
+            <div style="border: 1px solid #000; border-right: none; padding: 4px; text-align: center; font-weight: bold;">خاتم وتوقيع المدير</div>
+          </div>
+        `;
     } else if (type === 'transmission') {
         titleStr = 'ورقة إرسال';
-        const finalAttachments = (extras?.attachments || '').replace(/\n/g, '<br>');
+        const isBlank = !staff;
+        const finalAttachments = (extras?.attachments || (isBlank ? '........................................................' : '')).replace(/\n/g, '<br>');
         template = `
           <div class="header-image-container mb-4">
             <img src="${logoUrl}" alt="المملكة المغربية" class="header-image" />
@@ -431,13 +480,21 @@ export default function StaffCertificatesView({ institutionSettings, user, highl
             </tr>
             <tr>
               <td style="border: 1px solid #000; padding: 15px; text-align: right; vertical-align: top; line-height: 2; min-height: 220px; overflow-wrap: break-word;">
-                 - وثائق تهم السيد(ة): <b style="font-size: 16px;">${staff?.firstName || '................'} ${staff?.lastName || ''}</b><br>
-                 - الإطار: <b>${staff?.framework || '................'}</b><br>
-                 - رقم التأجير: <b>${staff?.ppr || '................'}</b><br>
-                 ${finalAttachments ? `<br>${finalAttachments}` : ''}
+                 ${isBlank ? `
+                   ........................................................<br>
+                   ........................................................<br>
+                   ........................................................<br>
+                   ........................................................<br>
+                   ........................................................
+                 ` : `
+                   - وثائق تهم السيد(ة): <b style="font-size: 16px;">${staff.firstName} ${staff.lastName}</b><br>
+                   - الإطار: <b>${staff.framework || '................'}</b><br>
+                   - رقم التأجير: <b>${staff.ppr || '................'}</b><br>
+                   ${finalAttachments ? `<br>${finalAttachments}` : ''}
+                 `}
               </td>
-              <td style="border: 1px solid #000; padding: 15px; vertical-align: top; font-size: 18px; font-weight: bold;">${extras?.count || '1'}</td>
-              <td style="border: 1px solid #000; padding: 15px; vertical-align: top;">${extras?.notes || 'للاختصاص و الإخبار'}</td>
+              <td style="border: 1px solid #000; padding: 15px; vertical-align: top; font-size: 18px; font-weight: bold;">${isBlank ? '........' : (extras?.count || '1')}</td>
+              <td style="border: 1px solid #000; padding: 15px; vertical-align: top;">${isBlank ? '................................' : (extras?.notes || 'للاختصاص و الإخبار')}</td>
             </tr>
           </table>
           <div style="display: flex; justify-content: space-between; margin-top: 30px; font-weight: bold;">
@@ -447,10 +504,37 @@ export default function StaffCertificatesView({ institutionSettings, user, highl
         `;
     }
 
+    const isMedicalReceipt = type === 'medical-receipt';
+
     const pw = window.open('', '_blank');
     if(!pw) return;
 
-    // Use A4 Landscape layout with two A5 panes (like CertificatesView)
+    const pageOrientation = isMedicalReceipt ? 'A4 portrait' : 'A4 landscape';
+    const bodyWidth = isMedicalReceipt ? '210mm' : '297mm';
+    const bodyHeight = isMedicalReceipt ? '297mm' : '210mm';
+    
+    let structure = '';
+    if (isMedicalReceipt) {
+      // 6 copies: 2 columns, 3 rows
+      structure = `
+        <div class="grid-6">
+          <div class="gc">${template}</div>
+          <div class="gc">${template}</div>
+          <div class="gc">${template}</div>
+          <div class="gc">${template}</div>
+          <div class="gc">${template}</div>
+          <div class="gc">${template}</div>
+        </div>
+      `;
+    } else {
+      structure = `
+        <div class="pp">
+          <div class="ph">${template}</div>
+          <div class="ph">${template}</div>
+        </div>
+      `;
+    }
+
     pw.document.write(`
       <!DOCTYPE html>
       <html lang="ar" dir="rtl">
@@ -459,16 +543,20 @@ export default function StaffCertificatesView({ institutionSettings, user, highl
           <title>${titleStr} - ${staff?.lastName || ''}</title>
           <style>
             @media print {
-              @page { size: A4 landscape; margin: 0; }
-              html, body { margin: 0; padding: 0; background: #fff; width: 297mm; height: 209mm; }
-              .pp { page-break-after: always; page-break-inside: avoid; }
+              @page { size: ${pageOrientation}; margin: 0; }
+              html, body { margin: 0; padding: 0; background: #fff; width: ${bodyWidth}; height: ${bodyHeight}; }
+              .pp, .grid-6 { page-break-after: always; page-break-inside: avoid; }
             }
-            @page { size: A4 landscape; margin: 0; }
+            @page { size: ${pageOrientation}; margin: 0; }
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { font-family: 'Arial', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; margin: 0; }
             .pp { width: 297mm; height: 210mm; display: flex; flex-direction: row; background: #fff; position: relative; overflow: hidden; margin: 0 auto; }
             .ph { flex: 1; width: 148.5mm; height: 210mm; padding: 12mm 15mm; border-left: 1px dashed #999; display: flex; flex-direction: column; overflow: hidden; }
             .ph:last-child { border-left: none; }
+            
+            .grid-6 { width: 210mm; height: 297mm; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; background: #fff; }
+            .gc { border: 1px dashed #ccc; padding: 5mm; overflow: hidden; display: flex; flex-direction: column; height: 99mm; }
+
             .text-center { text-align: center; }
             .font-bold { font-weight: bold; }
             .underline { text-decoration: underline; }
@@ -508,10 +596,7 @@ export default function StaffCertificatesView({ institutionSettings, user, highl
           </style>
         </head>
         <body>
-          <div class="pp">
-            <div class="ph">${template}</div>
-            <div class="ph">${template}</div>
-          </div>
+          ${structure}
           <script>
             setTimeout(() => { window.print(); }, 300);
           </script>
@@ -529,7 +614,7 @@ export default function StaffCertificatesView({ institutionSettings, user, highl
             <div className="max-w-3xl mx-auto mt-4">
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--color-primary-g)] text-[var(--color-primary)] text-2xl mb-4">
-                        <i className={highlightDoc === 'staff-work-cert' ? "fas fa-certificate" : highlightDoc === 'staff-resumption' ? "fas fa-file-signature" : highlightDoc === 'staff-absence' ? "fas fa-calendar-times" : highlightDoc === 'staff-leave' ? "fas fa-leaf" : "fas fa-paper-plane"}></i>
+                        <i className={highlightDoc === 'staff-work-cert' ? "fas fa-certificate" : highlightDoc === 'staff-resumption' ? "fas fa-file-signature" : highlightDoc === 'staff-absence' ? "fas fa-calendar-times" : highlightDoc === 'staff-leave' ? "fas fa-leaf" : highlightDoc === 'staff-medical-receipt' ? "fas fa-file-medical" : "fas fa-paper-plane"}></i>
                     </div>
                     <h2 className="text-3xl font-extrabold mb-3">{getDocTitle()}</h2>
                     <p className="text-[var(--color-mt)] text-sm">ابحث عن الموظف في القائمة وحدده لاستخراج وطباعة الوثيقة المطلوبة.</p>
@@ -587,6 +672,26 @@ export default function StaffCertificatesView({ institutionSettings, user, highl
                         </div>
                     )}
 
+                    {highlightDoc === 'staff-medical-receipt' && (
+                        <div className="mb-6 p-4 bg-[var(--color-bg)] rounded-xl border border-[var(--color-brd)] animate-[fi_0.3s_ease-out]">
+                             <h4 className="font-bold text-sm mb-3 flex items-center gap-2">
+                                <i className="fas fa-user-edit text-[var(--color-primary)]"></i> بيانات مسلم الشهادة (إضافي)
+                             </h4>
+                             <div className="space-y-3">
+                                <div>
+                                    <label className="block text-[10px] uppercase font-bold mb-1 opacity-70">اسم الشخص الذي قدم الشهادة</label>
+                                    <input 
+                                        type="text" 
+                                        className="inp w-full text-sm" 
+                                        placeholder="مثال: السيد (الاسم الكامل) أو اتركه فارغاً"
+                                        value={medicalInputs.deliveredBy}
+                                        onChange={e => setMedicalInputs({...medicalInputs, deliveredBy: e.target.value})}
+                                    />
+                                </div>
+                             </div>
+                        </div>
+                    )}
+
                     <div className="max-h-[350px] overflow-y-auto mb-6 border border-[var(--color-brd)] rounded-xl divide-y divide-[var(--color-brd)] custom-scrollbar" style={{scrollbarWidth: 'thin'}}>
                         {loading ? (
                             <div className="p-10 text-center text-[var(--color-mt)]"><i className="fas fa-spinner fa-spin text-xl mb-2"></i><br/>جاري التحميل...</div>
@@ -631,10 +736,11 @@ export default function StaffCertificatesView({ institutionSettings, user, highl
                                     'staff-resumption': 'resumption',
                                     'staff-absence': 'absence',
                                     'staff-leave': 'leave',
-                                    'staff-transmission': 'transmission'
+                                    'staff-transmission': 'transmission',
+                                    'staff-medical-receipt': 'medical-receipt'
                                 };
                                 const type = typeMap[highlightDoc];
-                                const extras = type === 'transmission' ? transInputs : undefined;
+                                const extras = type === 'transmission' ? transInputs : type === 'medical-receipt' ? medicalInputs : undefined;
                                 printDoc(type, s, extras);
                             }}
                         >
@@ -693,6 +799,17 @@ export default function StaffCertificatesView({ institutionSettings, user, highl
                                 }}
                             >
                                 <i className="fas fa-file-alt"></i> شهادة عمل فارغة
+                            </button>
+                        )}
+
+                        {highlightDoc === 'staff-medical-receipt' && (
+                            <button 
+                                className="btn btn-o justify-center py-3.5 text-base shadow-md"
+                                onClick={() => {
+                                    printDoc('medical-receipt', null, medicalInputs);
+                                }}
+                            >
+                                <i className="fas fa-file-alt"></i> وصل استلام فارغ
                             </button>
                         )}
                     </div>
