@@ -214,12 +214,12 @@ export default function CertificatesView({ institutionSettings, user }: { instit
 
   // Print Logic inside this file to keep it self-contained
   const certHTML = (d: Student, inst: any, certNum: string, certYear: string) => {
+    const logo = inst.logo || "https://upload.wikimedia.org/wikipedia/commons/e/ea/Coat_of_arms_of_Morocco.svg";
     return `
       <div class="cc-modern">
-        <div class="top-header">
-           <img src="https://z-cdn-media.chatglm.cn/files/1ac79b00-e161-420b-ae8c-e33e287ecad5.png?auth_key=1876450811-74017ecfc0a14ac1ac699b72186efdba-0-cee90226931ebd56e8c3b5f1737aeb60" alt="المملكة المغربية" class="header-image" />
+        <div class="top-header header-image-container">
+           <img src="${logo}" alt="المملكة المغربية" class="header-image" />
         </div>
-        <div class="divider"></div>
         
         <div class="header-info">
           <div style="flex: 1; text-align: right;">
@@ -351,8 +351,32 @@ body { font-family: 'Arial', sans-serif; -webkit-print-color-adjust: exact; prin
 .ph { flex: 1; width: 148.5mm; height: 210mm; padding: 10mm 12mm; border-left: 2px dashed #444; display: flex; flex-direction: column; overflow: hidden; }
 .ph:last-child { border-left: none; }
 .cc-modern { font-family: 'Arial', sans-serif; color: #000; height: 100%; display: flex; flex-direction: column; background: white; direction: rtl; }
-.top-header { text-align: center; margin-bottom: 5px; }
-.header-image { max-width: 200px; max-height: 50px; object-fit: contain; }
+.top-header { text-align: center; margin-bottom: 10px; }
+.header-image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    background: linear-gradient(180deg, #faf8f4 0%, #ffffff 100%);
+    border-bottom: 2px solid #c8a84e;
+    position: relative;
+    box-sizing: border-box;
+}
+/* ornaments */
+.header-image-container::before,
+.header-image-container::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 1.5px solid #c8a84e;
+    opacity: 0.3;
+}
+.header-image-container::before { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+.header-image-container::after { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+
+.header-image { max-width: 250px; max-height: 120px; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1)); transition: transform 0.4s ease; margin: 0 auto; display: block; }
 .divider { border-top: 1.5px solid #000; margin: 5px 0 10px 0; }
 .header-info { display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; margin-bottom: 15px; line-height: 1.6; }
 .title-box { border: 1.5px solid #000; padding: 5px 20px; text-align: center; font-size: 16px; font-weight: bold; width: fit-content; background: #fff; margin: 0 auto 15px auto; }
@@ -465,6 +489,11 @@ body { font-family: 'Arial', sans-serif; -webkit-print-color-adjust: exact; prin
                 <div className="bg-gradient-to-br from-[var(--color-card)] to-[var(--color-bg2)] border border-[var(--color-brd)] rounded-xl p-4">
                   <div className="text-xs text-[var(--color-mt)] mb-1">صفحات للطباعة (الكل)</div>
                   <div className="text-2xl font-bold text-[var(--color-primary)]">{students.length}</div>
+                </div>
+                <div className="lg:col-span-2 flex items-center justify-end">
+                   <button onClick={() => setStep(1)} className="btn btn-o btn-s">
+                     <i className="fas fa-file-import"></i> استيراد قائمة تلاميذ جديدة
+                   </button>
                 </div>
             </div>
 

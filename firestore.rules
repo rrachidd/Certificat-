@@ -1,39 +1,112 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Default deny
     match /{document=**} {
       allow read, write: if false;
     }
 
+    // --- Helpers ---
     function isSignedIn() {
       return request.auth != null;
     }
+
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
+
     function incoming() {
       return request.resource.data;
     }
+
     function existing() {
       return resource.data;
     }
-    
-    function isValidInstitutionSettings(data, userId) {
-      return data.keys().size() >= 1
-        && data.name is string && data.name.size() > 0 && data.name.size() <= 200
-        && (data.userId == userId || data.userId == null);
+
+    function isValidId(id) {
+       return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
     }
+
+    // --- Validations ---
+
+    function isValidInstitutionSettings(data) {
+      return data.keys().hasAll(['name', 'userId'])
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 200
+        && data.userId is string && data.userId.size() <= 100
+        && (data.get('academy', '') is string)
+        && (data.get('province', '') is string)
+        && (data.get('refNumber', '') is string)
+        && (data.get('phone', '') is string)
+        && (data.get('address', '') is string)
+        && (data.get('managerName', '') is string)
+        && (data.get('city', '') is string);
+    }
+
+    function isValidStudent(data) {
+      return data.keys().hasAll(['firstName', 'lastName'])
+        && data.firstName is string && data.firstName.size() > 0 && data.firstName.size() <= 100
+        && data.lastName is string && data.lastName.size() > 0 && data.lastName.size() <= 100
+        && (data.get('regNum', '') is string)
+        && (data.get('birthDate', '') is string)
+        && (data.get('birthPlace', '') is string)
+        && (data.get('level', '') is string)
+        && (data.get('yearFrom', '') is string)
+        && (data.get('yearTo', '') is string)
+        && (data.get('reason', '') is string)
+        && (data.get('_lv', '') is string);
+    }
+
+    function isValidArchiveRecord(data) {
+      return data.keys().hasAll(['studentName', 'certNumber', 'issuedAt'])
+        && data.studentName is string && data.studentName.size() > 0
+        && data.certNumber is string && data.certNumber.size() > 0
+        && data.issuedAt is string;
+    }
+
+    function isValidStaff(data) {
+      return data.keys().hasAll(['firstName', 'lastName', 'ppr'])
+        && data.firstName is string && data.firstName.size() > 0 && data.firstName.size() <= 100
+        && data.lastName is string && data.lastName.size() > 0 && data.lastName.size() <= 100
+        && data.ppr is string && data.ppr.size() > 0 && data.ppr.size() <= 50
+        && (data.get('cin', '') is string)
+        && (data.get('framework', '') is string)
+        && (data.get('grade', '') is string)
+        && (data.get('rank', '') is string)
+        && (data.get('adminTasks', '') is string)
+        && (data.get('address', '') is string)
+        && (data.get('phone', '') is string)
+        && (data.get('lastNameFr', '') is string)
+        && (data.get('firstNameFr', '') is string)
+        && (data.get('hiringDate', '') is string)
+        && (data.get('joinDate', '') is string);
+    }
+
+    // --- Matches ---
 
     match /users/{userId} {
       allow read: if isOwner(userId);
-      allow create: if isOwner(userId) && isValidInstitutionSettings(incoming(), userId);
-      allow update: if isOwner(userId) && isValidInstitutionSettings(incoming(), userId);
-      
+      allow create: if isOwner(userId) && isValidInstitutionSettings(incoming());
+      allow update: if isOwner(userId) && isValidInstitutionSettings(incoming());
+
       match /archive/{archiveId} {
-        allow read, write: if isOwner(userId);
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidArchiveRecord(incoming()) && isValidId(archiveId);
+        allow update: if isOwner(userId) && isValidArchiveRecord(incoming());
+        allow delete: if isOwner(userId);
       }
+
       match /students/{studentId} {
-        allow read, write: if isOwner(userId);
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidStudent(incoming()) && isValidId(studentId);
+        allow update: if isOwner(userId) && isValidStudent(incoming());
+        allow delete: if isOwner(userId);
+      }
+
+      match /staff/{staffId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidStaff(incoming()) && isValidId(staffId);
+        allow update: if isOwner(userId) && isValidStaff(incoming());
+        allow delete: if isOwner(userId);
       }
     }
   }

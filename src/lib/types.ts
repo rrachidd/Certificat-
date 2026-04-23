@@ -33,3 +33,22 @@ export interface Student {
   reason: string;
   _lv: string;
 }
+
+export interface Staff {
+  _id: number;
+  ppr: string;
+  firstName: string;
+  lastName: string;
+  firstNameFr?: string;
+  lastNameFr?: string;
+  cin: string;
+  framework: string;
+  grade: string;
+  rank: string;
+  adminTasks: string;
+  address: string;
+  phone: string;
+  hiringDate?: string;
+  joinDate?: string;
+  birthDate?: string;
+}

@@ -10,15 +10,81 @@
         "province": { "type": "string" },
         "refNumber": { "type": "string" },
         "userId": { "type": "string" },
-        "updatedAt": { "type": "number" }
+        "updatedAt": { "type": "number" },
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "managerName": { "type": "string" },
+        "city": { "type": "string" }
       },
       "required": ["name", "userId"]
+    },
+    "ArchiveRecord": {
+      "title": "Archive Record",
+      "description": "Record of a certificate issued to a student",
+      "type": "object",
+      "properties": {
+        "studentName": { "type": "string" },
+        "regNum": { "type": "string" },
+        "certNumber": { "type": "string" },
+        "certYear": { "type": "string" },
+        "issuedAt": { "type": "string", "format": "date-time" },
+        "level": { "type": "string" }
+      },
+      "required": ["studentName", "certNumber", "issuedAt"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Student record",
+      "type": "object",
+      "properties": {
+        "regNum": { "type": "string" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "birthDate": { "type": "string" },
+        "birthPlace": { "type": "string" },
+        "level": { "type": "string" },
+        "yearFrom": { "type": "string" },
+        "yearTo": { "type": "string" },
+        "reason": { "type": "string" },
+        "_lv": { "type": "string" }
+      },
+      "required": ["firstName", "lastName"]
+    },
+    "Staff": {
+      "title": "Staff",
+      "description": "Staff/Teacher record",
+      "type": "object",
+      "properties": {
+        "ppr": { "type": "string" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "cin": { "type": "string" },
+        "framework": { "type": "string" },
+        "grade": { "type": "string" },
+        "rank": { "type": "string" },
+        "adminTasks": { "type": "string" },
+        "address": { "type": "string" },
+        "phone": { "type": "string" }
+      },
+      "required": ["firstName", "lastName", "ppr"]
     }
   },
   "firestore": {
     "/users/{userId}": {
       "schema": { "$ref": "#/entities/InstitutionSettings" },
       "description": "User's institution profile."
+    },
+    "/users/{userId}/archive/{archiveId}": {
+      "schema": { "$ref": "#/entities/ArchiveRecord" },
+      "description": "Certificate issue records."
+    },
+    "/users/{userId}/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Student records."
+    },
+    "/users/{userId}/staff/{staffId}": {
+      "schema": { "$ref": "#/entities/Staff" },
+      "description": "Staff/Teacher records."
     }
   }
 }

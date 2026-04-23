@@ -9,12 +9,14 @@ import SettingsView from './components/SettingsView';
 import CertificatesView from './components/CertificatesView';
 import ArchiveView from './components/ArchiveView';
 import AddStudentView from './components/AddStudentView';
+import StaffCertificatesView from './components/StaffCertificatesView';
+import AddStaffView from './components/AddStaffView';
 import StatsView from './components/StatsView';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [currentView, setCurrentView] = useState<'certificates' | 'settings' | 'archive' | 'add-student' | 'stats'>('certificates');
+  const [currentView, setCurrentView] = useState<'certificates' | 'settings' | 'archive' | 'add-student' | 'stats' | 'staff-docs' | 'add-staff' | 'staff-work-cert' | 'staff-resumption' | 'staff-absence' | 'staff-leave' | 'staff-transmission'>('certificates');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const [institutionSettings, setInstitutionSettings] = useState({
@@ -25,7 +27,8 @@ export default function App() {
     phone: "0524360090",
     address: "ثانوية النهضة المحاميد",
     managerName: "عبد الرحيم مخايري",
-    city: "مراكش"
+    city: "مراكش",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Logo_du_minist%C3%A8re_de_l%27%C3%A9ducation_nationale_du_Pr%C3%A9scolaire_et_des_sports.png/640px-Logo_du_minist%C3%A8re_de_l%27%C3%A9ducation_nationale_du_Pr%C3%A9scolaire_et_des_sports.png"
   });
 
   useEffect(() => {
@@ -66,10 +69,10 @@ export default function App() {
         <div className="bg-p" style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}></div>
         <div className="bg-[var(--color-card)] p-8 rounded-2xl border border-[var(--color-brd)] text-center max-w-sm w-full relative z-10 shadow-2xl">
           <div className="w-16 h-16 mx-auto bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-accent)] shadow-[0_4px_20px_var(--color-primary-g)] text-white flex items-center justify-center rounded-2xl mb-4 text-3xl">
-            <i className="fas fa-archive"></i>
+            <i className="fas fa-school-flag"></i>
           </div>
-          <h1 className="text-2xl font-bold mb-2">أرشيف المؤسسة التعليمية</h1>
-          <p className="text-sm text-[var(--color-mt)] mb-6 font-semibold">بوابة استخراج الشواهد المدرسية</p>
+          <h1 className="text-2xl font-bold mb-2">منظومة الإدارة المدرسية</h1>
+          <p className="text-sm text-[var(--color-mt)] mb-6 font-semibold">تدبير شؤون التلاميذ والموظفين</p>
           <button onClick={loginWithGoogle} className="btn btn-p w-full justify-center">
             <i className="fab fa-google"></i> تسجيل الدخول باستخدام جوجل
           </button>
@@ -102,9 +105,9 @@ export default function App() {
           <div className="lg:hidden mb-6 flex items-center justify-between bg-[var(--color-card)] p-4 rounded-xl border border-[var(--color-brd)]">
              <div className="flex items-center gap-3">
                <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-accent)] text-white">
-                 <i className="fas fa-school text-sm"></i>
+                 <i className="fas fa-landmark text-sm"></i>
                </div>
-               <h1 className="font-bold text-lg">بوابة المؤسسة</h1>
+               <h1 className="font-bold text-lg">منظومة الإدارة</h1>
              </div>
              <button onClick={() => setIsSidebarOpen(true)} className="p-2 text-[var(--color-fg)] bg-[var(--color-bg)] rounded-lg border border-[var(--color-brd)]">
                 <i className="fas fa-bars"></i>
@@ -119,6 +122,10 @@ export default function App() {
              <StatsView user={user} />
           ) : currentView === 'add-student' ? (
              <AddStudentView user={user} onSuccess={() => setCurrentView('certificates')} />
+          ) : currentView === 'add-staff' ? (
+             <AddStaffView user={user} onSuccess={() => setCurrentView('staff-docs')} />
+          ) : currentView === 'staff-docs' || currentView === 'staff-work-cert' || currentView === 'staff-resumption' || currentView === 'staff-absence' || currentView === 'staff-leave' || currentView === 'staff-transmission' ? (
+             <StaffCertificatesView institutionSettings={institutionSettings} user={user} highlightDoc={currentView} />
           ) : (
              <CertificatesView institutionSettings={institutionSettings} user={user} />
           )}

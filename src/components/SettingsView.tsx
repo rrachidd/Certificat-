@@ -10,6 +10,7 @@ interface SettingsProps {
     address?: string;
     managerName?: string;
     city?: string;
+    logo?: string;
   };
   onSave: (s: any) => Promise<void>;
 }
@@ -136,6 +137,17 @@ export default function SettingsView({ settings, onSave }: SettingsProps) {
               name="refNumber" 
               value={formData.refNumber || ''} 
               onChange={handleChange} 
+              className="inp" 
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm mb-2 text-[var(--color-mt)] font-semibold">رابط شعار المؤسسة / الوزارة</label>
+            <input 
+              type="text" 
+              name="logo" 
+              value={formData.logo || ''} 
+              onChange={handleChange} 
+              placeholder="ضع رابط الصورة هنا..."
               className="inp" 
             />
           </div>

@@ -2,8 +2,8 @@ import React from 'react';
 import { User } from 'firebase/auth';
 
 interface SidebarProps {
-  currentView: 'certificates' | 'settings' | 'archive' | 'add-student' | 'stats';
-  setCurrentView: (v: 'certificates' | 'settings' | 'archive' | 'add-student' | 'stats') => void;
+  currentView: 'certificates' | 'settings' | 'archive' | 'add-student' | 'stats' | 'staff-docs' | 'add-staff' | 'staff-work-cert' | 'staff-resumption' | 'staff-absence' | 'staff-leave' | 'staff-transmission';
+  setCurrentView: (v: 'certificates' | 'settings' | 'archive' | 'add-student' | 'stats' | 'staff-docs' | 'add-staff' | 'staff-work-cert' | 'staff-resumption' | 'staff-absence' | 'staff-leave' | 'staff-transmission') => void;
   user: User;
   onLogout: () => void;
   isOpen: boolean;
@@ -20,7 +20,7 @@ export default function Sidebar({ currentView, setCurrentView, user, onLogout, i
           </div>
           <div>
             <h1 className="text-sm font-bold leading-tight">بوابة المؤسسة</h1>
-            <p className="text-[10px] text-[var(--color-mt)]">إعدادية - شواهد مدرسية</p>
+            <p className="text-[10px] text-[var(--color-mt)]">نظام الإدارة المتكامل</p>
           </div>
         </div>
         <button className="lg:hidden text-[var(--color-mt)]" onClick={() => setIsOpen(false)}>
@@ -28,52 +28,134 @@ export default function Sidebar({ currentView, setCurrentView, user, onLogout, i
         </button>
       </div>
 
-      <nav className="flex-1 space-y-2 overflow-y-auto pr-1">
-        <button 
-          onClick={() => { setCurrentView('certificates'); setIsOpen(false); }}
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${currentView === 'certificates' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
-        >
-          <i className="fas fa-certificate w-5 text-center"></i>
-          الشواهد المدرسية
-        </button>
-        <button 
-          onClick={() => { setCurrentView('add-student'); setIsOpen(false); }}
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${currentView === 'add-student' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
-        >
-          <i className="fas fa-plus w-5 text-center"></i>
-          إضافة تلميذ
-        </button>
-        <button 
-          onClick={() => { setCurrentView('archive'); setIsOpen(false); }}
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${currentView === 'archive' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
-        >
-          <i className="fas fa-archive w-5 text-center"></i>
-          أرشيف الشواهد
-        </button>
-        <button 
-          onClick={() => { setCurrentView('stats'); setIsOpen(false); }}
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${currentView === 'stats' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
-        >
-          <i className="fas fa-chart-pie w-5 text-center"></i>
-          إحصائيات ومقارنات
-        </button>
-        <button 
-          onClick={() => { setCurrentView('settings'); setIsOpen(false); }}
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${currentView === 'settings' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
-        >
-          <i className="fas fa-cog w-5 text-center"></i>
-          إعدادات المؤسسة
-        </button>
+      <nav className="flex-1 space-y-4 overflow-y-auto pr-1">
+        {/* Student Section */}
+        <div>
+          <div className="px-4 mb-2 text-[10px] uppercase tracking-wider font-bold text-[var(--color-mt)] opacity-50">شؤون التلاميذ</div>
+          <div className="space-y-1">
+            <button 
+              onClick={() => { setCurrentView('certificates'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${currentView === 'certificates' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-certificate w-4 text-center"></i>
+              الشواهد المدرسية
+            </button>
+            <button 
+              onClick={() => { setCurrentView('add-student'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${currentView === 'add-student' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-plus-circle w-4 text-center"></i>
+              إضافة تلميذ
+            </button>
+          </div>
+        </div>
+
+        {/* System Section */}
+        <div>
+          <div className="px-4 mb-2 text-[10px] uppercase tracking-wider font-bold text-[var(--color-mt)] opacity-50">النظام</div>
+          <div className="space-y-1">
+            <button 
+              onClick={() => { setCurrentView('archive'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${currentView === 'archive' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-archive w-4 text-center"></i>
+              أرشيف الشواهد
+            </button>
+            <button 
+              onClick={() => { setCurrentView('stats'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${currentView === 'stats' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-chart-pie w-4 text-center"></i>
+              إحصائيات
+            </button>
+            <button 
+              onClick={() => { setCurrentView('settings'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${currentView === 'settings' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-cog w-4 text-center"></i>
+              الإعدادات
+            </button>
+          </div>
+        </div>
+
+        {/* Staff Section */}
+        <div>
+          <div className="px-4 mb-2 text-[10px] uppercase tracking-wider font-bold text-[var(--color-mt)] opacity-50">شؤون الموظفين</div>
+          <div className="space-y-1">
+            <button 
+              onClick={() => { setCurrentView('staff-docs'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${currentView === 'staff-docs' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-user-tie w-4 text-center"></i>
+              وثائق الموظفين
+            </button>
+            <button 
+              onClick={() => { setCurrentView('add-staff'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${currentView === 'add-staff' ? 'bg-[var(--color-primary-g)] text-[var(--color-primary)] border border-[var(--color-primary)]/20' : 'text-[var(--color-mt)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-user-plus w-4 text-center"></i>
+              إضافة موظف
+            </button>
+            <div className="pt-2 pb-1 px-4 text-[10px] text-[var(--color-mt)] opacity-40 font-bold border-t border-white/5 mt-2">نماذج الوثائق</div>
+            <button 
+              onClick={() => { setCurrentView('staff-work-cert'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg text-[11px] font-medium transition-all ${currentView === 'staff-work-cert' ? 'text-[var(--color-primary)]' : 'text-[var(--color-mt)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-certificate w-4 text-center opacity-70"></i>
+              شهادة العمل
+            </button>
+            <button 
+              onClick={() => { setCurrentView('staff-resumption'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg text-[11px] font-medium transition-all ${currentView === 'staff-resumption' ? 'text-[var(--color-primary)]' : 'text-[var(--color-mt)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-file-signature w-4 text-center opacity-70"></i>
+              محضر الاستئناف
+            </button>
+            <button 
+              onClick={() => { setCurrentView('staff-absence'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg text-[11px] font-medium transition-all ${currentView === 'staff-absence' ? 'text-[var(--color-primary)]' : 'text-[var(--color-mt)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-calendar-times w-4 text-center opacity-70"></i>
+              طلب الإذن بالغياب
+            </button>
+            <button 
+              onClick={() => { setCurrentView('staff-leave'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg text-[11px] font-medium transition-all ${currentView === 'staff-leave' ? 'text-[var(--color-primary)]' : 'text-[var(--color-mt)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-leaf w-4 text-center opacity-70"></i>
+              الرخص
+            </button>
+            <button 
+              onClick={() => { setCurrentView('staff-transmission'); setIsOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg text-[11px] font-medium transition-all ${currentView === 'staff-transmission' ? 'text-[var(--color-primary)]' : 'text-[var(--color-mt)] hover:text-[var(--color-fg)]'}`}
+            >
+              <i className="fas fa-paper-plane w-4 text-center opacity-70"></i>
+              ورقة الإرسال
+            </button>
+          </div>
+        </div>
       </nav>
 
       <div className="mt-8 pt-5 border-t border-[var(--color-brd)]">
-        <div className="flex flex-col mb-4 bg-[var(--color-card)] p-3 rounded-xl border border-[var(--color-brd)] shadow-inner">
-          <div className="text-xs text-[var(--color-mt)] mb-1">المستخدم المتصل</div>
-          <div className="text-sm font-semibold truncate text-[var(--color-fg)]" title={user.email || ''}>{user.displayName || user.email}</div>
+        <div className="flex flex-col items-center mb-6 bg-white/5 p-4 rounded-2xl border border-white/10 shadow-xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div className="w-14 h-14 rounded-full border-2 border-[var(--color-primary)] p-1 mb-3 relative z-10 transition-transform group-hover:scale-105">
+             <div className="w-full h-full rounded-full bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-accent)] flex items-center justify-center text-white shadow-lg overflow-hidden">
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="Avatar" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                ) : (
+                  <i className="fas fa-user-circle text-3xl"></i>
+                )}
+             </div>
+          </div>
+          <div className="text-center relative z-10">
+            <div className="text-sm font-bold text-[var(--color-fg)] mb-0.5">{user.displayName || 'مدير النظام'}</div>
+            <div className="text-[10px] text-[var(--color-mt)] font-medium mb-3 opacity-70 truncate max-w-[150px]">{user.email}</div>
+            <button onClick={onLogout} className="text-[10px] text-red-400 hover:text-red-300 font-bold flex items-center justify-center gap-1.5 transition-colors">
+              <i className="fas fa-power-off"></i> تسجيل الخروج
+            </button>
+          </div>
         </div>
-        <button onClick={onLogout} className="btn w-full btn-o text-xs justify-center border-[var(--color-brd)]">
-          <i className="fas fa-sign-out-alt"></i> تسجيل الخروج
-        </button>
       </div>
     </aside>
   );
